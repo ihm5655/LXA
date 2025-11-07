@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 학습 경험 아키텍트 (LXA) - 늘봄 코그니케어</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background-color: #FFFFFF;
+            color: #193361;
+            line-height: 1.7;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 네비게이션 */
+        nav {
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 10px rgba(25, 51, 97, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #193361;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-menu a {
+            color: #193361;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            color: #FFC300;
+        }
+        
+        /* 히어로 섹션 */
+        .hero {
+            background: linear-gradient(135deg, #193361 0%, #2a4d8f 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .hero .highlight {
+            color: #FFC300;
+            font-weight: bold;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            line-height: 1.8;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #FFC300;
+            color: #193361;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 195, 0, 0.4);
+        }
+        
+        /* 섹션 공통 스타일 */
+        section {
+            padding: 80px 20px;
+        }
+        
+        section h2 {
+            font-size: 36px;
+            margin-bottom: 50px;
+            text-align: center;
+            color: #193361;
+        }
+        
+        .section-alt {
+            background-color: #f8f9fc;
+        }
+        
+        /* 문제 정의 */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .problem-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(25, 51, 97, 0.1);
+            text-align: center;
+        }
+        
+        .problem-card .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        .problem-card h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #193361;
+        }
+        
+        .problem-card p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        /* 솔루션 */
+        .solution-content {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .solution-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .solution-text h3 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #193361;
+        }
+        
+        .solution-text p {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .solution-image {
+            flex: 1;
+            min-width: 300px;
+            background: linear-gradient(135deg, #193361 0%, #2a4d8f 100%);
+            padding: 60px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+        }
+        
+        .solution-image .stat {
+            font-size: 60px;
+            font-weight: bold;
+            color: #FFC300;
+            margin-bottom: 15px;
+        }
+        
+        .solution-image p {
+            font-size: 20px;
+            line-height: 1.8;
+        }
+        
+        /* 핵심 기능 */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            border: 2px solid #FFC300;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 195, 0, 0.2);
+        }
+        
+        .feature-card .icon {
+            font-size: 45px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 18px;
+            color: #193361;
+        }
+        
+        .feature-card p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        /* 신뢰 구축 */
+        .trust-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .trust-item {
+            background: white;
+            padding: 35px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #FFC300;
+            box-shadow: 0 3px 15px rgba(25, 51, 97, 0.08);
+        }
+        
+        .trust-item h3 {
+            font-size: 24px;
+            margin-bottom: 18px;
+            color: #193361;
+        }
+        
+        .trust-item p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        /* 수익 모델 */
+        .revenue-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+        
+        .revenue-stage {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(25, 51, 97, 0.1);
+        }
+        
+        .revenue-stage .number {
+            font-size: 40px;
+            font-weight: bold;
+            color: #FFC300;
+            margin-bottom: 15px;
+        }
+        
+        .revenue-stage h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #193361;
+        }
+        
+        .revenue-stage p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #555;
+        }
+        
+        .arrow {
+            font-size: 30px;
+            color: #FFC300;
+        }
+        
+        /* 가격 */
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+        
+        .pricing-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            border: 3px solid #FFC300;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(255, 195, 0, 0.15);
+        }
+        
+        .pricing-card h3 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #193361;
+        }
+        
+        .pricing-card .discount {
+            font-size: 36px;
+            font-weight: bold;
+            color: #FFC300;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-card p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background-color: #FFC300;
+            color: #193361;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        /* CTA 섹션 */
+        .final-cta {
+            background: linear-gradient(135deg, #193361 0%, #2a4d8f 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .final-cta h2 {
+            color: white;
+            font-size: 38px;
+            margin-bottom: 30px;
+        }
+        
+        .final-cta p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            line-height: 1.8;
+        }
+        
+        /* 푸터 */
+        footer {
+            background-color: #193361;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        footer p {
+            font-size: 16px;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+        
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            section h2 {
+                font-size: 28px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                gap: 15px;
+                font-size: 14px;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav>
+        <div class="container">
+            <div class="logo">늘봄 코그니케어</div>
+            <ul class="nav-menu">
+                <li><a href="#problem">문제</a></li>
+                <li><a href="#solution">솔루션</a></li>
+                <li><a href="#features">혜택</a></li>
+                <li><a href="#trust">신뢰</a></li>
+                <li><a href="#revenue">수익모델</a></li>
+                <li><a href="#pricing">가격</a></li>
+                <li><a href="#cta">신청</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 히어로 섹션 -->
+    <section class="hero">
+        <div class="container">
+            <h1>공공기관의 지속 가능한 해법:<br>AI 튜터링 도입으로 <span class="highlight">교육 효율 30% 증가</span>,<br>B2G 수주 경쟁력을 높이세요</h1>
+            <p>시니어의 전문 일자리 창출과 다문화 교육 격차 해소를<br>데이터로 증명하는 AI 학습 경험 아키텍트(LXA)</p>
+            <a href="#cta" class="cta-button">✅ [선착순] 초기 파트너 특별 혜택 신청</a>
+        </div>
+    </section>
+
+    <!-- 문제 정의 -->
+    <section id="problem" class="section-alt">
+        <div class="container">
+            <h2>😥 해결해야 할 지역사회 문제</h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="icon">👥</div>
+                    <h3>다문화 교육 인력 부족</h3>
+                    <p>증가하는 다문화 가정 대비 전문 교육 인력이 절대적으로 부족한 상황입니다.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">💼</div>
+                    <h3>중장년층 양질의 일자리 부족</h3>
+                    <p>경력단절 여성과 시니어들의 전문성을 활용할 수 있는 일자리가 필요합니다.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">📊</div>
+                    <h3>교육 효율성 검증 필요</h3>
+                    <p>B2G 사업 수주를 위한 정량적 성과 데이터와 검증된 솔루션이 요구됩니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 솔루션 -->
+    <section id="solution">
+        <div class="container">
+            <h2>✨ LXA 모델: 평생교육 전문성과 AI 기술의 융합</h2>
+            <div class="solution-content">
+                <div class="solution-text">
+                    <h3>AI 학습 경험 아키텍트(LXA)란?</h3>
+                    <p>평생교육사의 전문성과 AI 기술을 결합하여, 맞춤형 교육 프로그램을 기획하고 실행하는 신직업입니다.</p>
+                    <p><strong>핵심 가치:</strong> 지역 시니어 인력을 LXA 전문가로 양성하여 다문화 교육의 질을 높이고, 동시에 지속 가능한 일자리를 창출합니다.</p>
+                    <p><strong>검증된 효과:</strong> AI 기반 맞춤형 콘텐츠를 통해 학습 효율성이 30% 향상되었습니다.</p>
+                </div>
+                <div class="solution-image">
+                    <div class="stat">30%↑</div>
+                    <p>AI 기반 맞춤형 프로그램으로<br>학습 효율 향상 실증</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 핵심 기능/혜택 -->
+    <section id="features" class="section-alt">
+        <div class="container">
+            <h2>🌟 핵심 기능 및 혜택</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon">🎯</div>
+                    <h3>교육 효율성 극대화</h3>
+                    <p>AI 기반 맞춤형 콘텐츠 기획으로 학습자별 최적화된 교육 프로그램을 제공합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">👨‍🏫</div>
+                    <h3>지속 가능한 인력 양성</h3>
+                    <p>지역 정주형 LXA 전문가(시니어)를 양성하여 안정적인 교육 인프라를 구축합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📈</div>
+                    <h3>소셜 임팩트 데이터</h3>
+                    <p>B2G 수주에 유리한 정량적 성과 보고와 데이터 기반 의사결정을 지원합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 신뢰 구축 -->
+    <section id="trust">
+        <div class="container">
+            <h2>🤝 신뢰와 검증</h2>
+            <div class="trust-content">
+                <div class="trust-item">
+                    <h3>✓ MVP 시범 운영 계획</h3>
+                    <p>안산시 일자리센터 시니어를 대상으로 LXA 양성 프로그램 시범 운영을 진행합니다.</p>
+                </div>
+                <div class="trust-item">
+                    <h3>✓ 지역 협력 기관 연계</h3>
+                    <p>안산시 보건소, 평생학습관, 여성인력센터와의 긴밀한 협력 네트워크를 구축하고 있습니다.</p>
+                </div>
+                <div class="trust-item">
+                    <h3>✓ 정량적 데이터 기반 검증</h3>
+                    <p>AI 교육 효용성에 대한 실증 데이터(30% 향상)로 회의론을 해소하고 신뢰를 구축합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 수익 모델 -->
+    <section id="revenue" class="section-alt">
+        <div class="container">
+            <h2>💰 단계별 수익 모델 전략</h2>
+            <div class="revenue-flow">
+                <div class="revenue-stage">
+                    <div class="number">1</div>
+                    <h3>B2G</h3>
+                    <p>위탁 교육 및<br>AI 솔루션 제공</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="revenue-stage">
+                    <div class="number">2</div>
+                    <h3>B2B</h3>
+                    <p>디지털 컨설팅 및<br>라이선스 판매</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="revenue-stage">
+                    <div class="number">3</div>
+                    <h3>B2C</h3>
+                    <p>LXA 전문가<br>양성 과정</p>
+                </div>
+            </div>
+            <p style="text-align: center; font-size: 18px; margin-top: 40px; color: #555; line-height: 1.8;">
+                초기에는 예비창업패키지 등 정부 지원 사업을 적극 활용하여<br>안정적인 기반을 마련합니다.
+            </p>
+        </div>
+    </section>
+
+    <!-- 가격 및 조건 -->
+    <section id="pricing">
+        <div class="container">
+            <h2>💸 초기 파트너 특별 혜택</h2>
+            <p style="text-align: center; font-size: 20px; margin-bottom: 40px; color: #193361; line-height: 1.8;">
+                선착순 3개 기관에게만 제공되는 베타 파트너 혜택입니다
+            </p>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3>컨설팅</h3>
+                    <div class="discount">50% 할인</div>
+                    <p>AI 기반 교육 프로그램<br>기획 및 운영 컨설팅</p>
+                    <span class="badge">선착순 3개 기관</span>
+                </div>
+                <div class="pricing-card">
+                    <h3>튜터 양성 과정</h3>
+                    <div class="discount">20% 할인</div>
+                    <p>LXA 전문가 양성을 위한<br>체계적인 교육 프로그램</p>
+                    <span class="badge">선착순 3개 기관</span>
+                </div>
+                <div class="pricing-card">
+                    <h3>라이선스</h3>
+                    <div class="discount">3개월 무상</div>
+                    <p>AI 학습 플랫폼<br>라이선스 제공</p>
+                    <span class="badge">선착순 3개 기관</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 최종 CTA -->
+    <section id="cta" class="final-cta">
+        <div class="container">
+            <h2>🎯 지역 사회 변화를 위한 첫 걸음</h2>
+            <p>지금 문의하시면 초기 파트너로서 특별 혜택을 받으실 수 있습니니다.<br>함께 교육 혁신과 일자리 창출을 만들어가세요.</p>
+            <a href="mailto:contact@lxa.kr" class="cta-button">✅ [선착순] 초기 파트너 특별 혜택 신청</a>
+            <p style="margin-top: 30px; font-size: 16px; opacity: 0.9;">
+                문의: contact@lxa.kr | 안산시 기반 B2G 솔루션
+            </p>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="container">
+            <p><strong>늘봄 코그니케어 - AI 학습 경험 아키텍트(LXA)</strong></p>
+            <p style="margin-top: 15px;">시니어의 전문 일자리 창출과 다문화 교육 격차 해소를 실현합니다</p>
+            <p style="margin-top: 15px; font-size: 14px;">© 2025 늘봄 코그니케어. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
